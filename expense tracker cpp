@@ -1,0 +1,91 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <iomanip>
+
+using namespace std;
+
+class Expense {
+public:
+    string description;
+    double amount;
+    string category;
+
+    Expense(string desc, double amt, string cat)
+        : description(desc), amount(amt), category(cat) {}
+};
+
+vector<Expense> expenses;
+unordered_map<string, double> categoryTotals;
+
+void addExpense() {
+    string description, category;
+    double amount;
+    
+    cout << "Enter expense description: ";
+    getline(cin, description);
+    cout << "Enter expense amount: ";
+    cin >> amount;
+    cin.ignore(); // To ignore the newline character left by cin
+    cout << "Enter expense category: ";
+    getline(cin, category);
+
+    expenses.push_back(Expense(description, amount, category));
+    categoryTotals[category] += amount;
+    cout << "Expense added." << endl;
+}
+
+void viewExpenses() {
+    if (expenses.empty()) {
+        cout << "No expenses to display." << endl;
+    } else {
+        for (size_t i = 0; i < expenses.size(); ++i) {
+            cout << i + 1 << ". " << expenses[i].description
+                 << " | $" << fixed << setprecision(2) << expenses[i].amount
+                 << " | Category: " << expenses[i].category << endl;
+        }
+    }
+}
+
+void viewSummaryByCategory() {
+    if (categoryTotals.empty()) {
+        cout << "No categories to display." << endl;
+    } else {
+        cout << "Expense Summary by Category:" << endl;
+        for (const auto& entry : categoryTotals) {
+            cout << "Category: " << entry.first << " | Total: $" 
+                 << fixed << setprecision(2) << entry.second << endl;
+        }
+    }
+}
+
+int main() {
+    int option;
+    while (true) {
+        cout << "\nExpense Tracker" << endl;
+        cout << "1. Add Expense" << endl;
+        cout << "2. View All Expenses" << endl;
+        cout << "3. View Expense Summary by Category" << endl;
+        cout << "4. Exit" << endl;
+        cout << "Choose an option: ";
+        cin >> option;
+        cin.ignore(); // To ignore the newline character left by cin
+
+        switch (option) {
+            case 1:
+                addExpense();
+                break;
+            case 2:
+                viewExpenses();
+                break;
+            case 3:
+                viewSummaryByCategory();
+                break;
+            case 4:
+                cout << "Exiting..." << endl;
+                return 0;
+            default:
+                cout << "Invalid option, please try again." << endl;
+        }
+    }
+}
